@@ -1,0 +1,1591 @@
+{
+  "created_at": "2026-11-03",
+  "notes": "Pinned Hugging Face model download manifest (a snapshot taken on 2026-11-03; revisions and sizes go stale, so re-pin before relying on it). The 'role' fields are the author's own evaluation labels. All repos were public and ungated when checked on 2026-11-03, so HF_TOKEN is optional (recommended only for rate-limit headroom). Gated/private models would require a token.",
+  "default_group": "core4",
+  "groups": {
+    "core3": "Router + main reasoner + verifier",
+    "core4": "core3 + long-context/multimodal router",
+    "no_coder": "core4 + guard helper, without large Qwen coder",
+    "all": "The original six models only (core4 + Gemma 4 + Qwen3-Coder). Newer candidates are in the new_* groups.",
+    "new_small": "Small additions (about 97 GB): Nemotron 3.5 Lightning 30B + Super VL 120B",
+    "new_mid": "Mid-size additions (about 724 GB): MiMo V2.6 Flash, MiniMax M3.1 Flash, Reflection Beam",
+    "new_large": "Large additions (about 3.15 TB): Step 5, GLM-5.3, Muse Spark Open (gated), MiMo V2.6 Pro, Ling 3.1, Mistral Large 4",
+    "osi_open": "Only MIT / Apache-2.0 licensed additions: MiMo V2.6 Pro + Flash, Ling 3.1, Reflection Beam",
+    "nv_edge": "NVIDIA, small memory (llama.cpp GGUF and the 24GB-class Bolt): Bolt E4B, Nano 4B, Dory 4B, Bolt 74B-A9B",
+    "nv_nvfp4": "NVIDIA's own Nemotron family in NVFP4 (Blackwell: B200 / B300 / GB200 / GB300 / RTX 50), including the Labs variants",
+    "nv_fp8": "NVIDIA Nemotron family in FP8 (Hopper / Ada / Blackwell)",
+    "nv_bf16": "NVIDIA Nemotron family in BF16 (any GPU; fine-tuning; Ultra alone is 1.1 TB)",
+    "nvq_current": "NVIDIA-published NVFP4 builds of other vendors' models, 2026 releases (Qwen 3.5/3.6/3.8, Gemma 4, Kimi K2.5-K3, GLM 4.7-5.3, DeepSeek V4, MiniMax, Mistral Medium, Muse Glimmer). Blackwell",
+    "nvq_legacy": "Same, older (2025) generation: Qwen3, Qwen3-Next, Llama 3.x/4, Phi-4, DeepSeek V3.2 / R1-0528, Kimi K2-Thinking. Blackwell",
+    "community": "Community-modified GGUF builds added by request (not official; refusal behaviour changed). Small, llama.cpp"
+  },
+  "models": [
+    {
+      "repo_id": "nvidia/Qwen3.8-27B-NVFP4",
+      "revision": "482ca0f3832238542f8f5295dde86b5f22711d80",
+      "role": "fast_router / fallback / policy_precheck",
+      "license": "apache-2.0",
+      "size_bytes": 21945291730,
+      "groups": [
+        "core3",
+        "core4",
+        "no_coder",
+        "all"
+      ],
+      "priority": 1,
+      "size_bytes_original": 21934506600,
+      "file_count": 19,
+      "quant": "NVFP4"
+    },
+    {
+      "repo_id": "nvidia/DeepSeek-V4.1-Flash-1017-NVFP4",
+      "revision": "480550d349ede47a048eb65a276c5c01a06256e2",
+      "role": "main_reasoner / heavy_planner",
+      "license": "mit",
+      "size_bytes": 429008964498,
+      "groups": [
+        "core3",
+        "core4",
+        "no_coder",
+        "all"
+      ],
+      "priority": 2,
+      "size_bytes_original": 429002296013,
+      "file_count": 84,
+      "quant": "NVFP4"
+    },
+    {
+      "repo_id": "nvidia/GLM-5.3-Flash-NVFP4",
+      "revision": "1d00738646cbb0c6d0a9eb403dac5f366f1473a7",
+      "role": "verifier / critic / code_review",
+      "license": "mit",
+      "size_bytes": 204476282862,
+      "groups": [
+        "core3",
+        "core4",
+        "no_coder",
+        "all"
+      ],
+      "priority": 3,
+      "size_bytes_original": 408931011842,
+      "file_count": 44,
+      "quant": "NVFP4"
+    },
+    {
+      "repo_id": "nvidia/Qwen3.8-Flash-Next-NVFP4",
+      "revision": "fc694b54fb0174e0913e6adf86691ef85a4ead47",
+      "role": "long_context_router / multimodal_triage",
+      "license": "nvidia-open-model-license / other",
+      "size_bytes": 132734506847,
+      "groups": [
+        "core4",
+        "no_coder",
+        "all"
+      ],
+      "priority": 4,
+      "size_bytes_original": 132725245223,
+      "file_count": 25,
+      "quant": "NVFP4"
+    },
+    {
+      "repo_id": "google/gemma-4-31B-it",
+      "revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+      "role": "guard_helper / cheap_verifier",
+      "license": "apache-2.0",
+      "size_bytes": 62578686256,
+      "groups": [
+        "no_coder",
+        "all"
+      ],
+      "priority": 5,
+      "size_bytes_original": 175739734665,
+      "file_count": 12,
+      "quant": "BF16"
+    },
+    {
+      "repo_id": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+      "revision": "9d90cf8fca1bf7b7acca42d3fc9ae694a2194069",
+      "role": "code_agent / repo_analyzer / patch_generator",
+      "license": "apache-2.0",
+      "size_bytes": 960327832085,
+      "groups": [
+        "all"
+      ],
+      "priority": 6,
+      "size_bytes_original": 960313541352,
+      "file_count": 253,
+      "quant": "BF16"
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-NVFP4",
+      "revision": "bee7596271d1495f6992ae224aefde4410e816b8",
+      "role": "small_fast_router / cheap_helper",
+      "license": "openmdw-1.1",
+      "quant": "NVFP4",
+      "size_bytes": 21583785438,
+      "file_count": 70,
+      "groups": [
+        "new_small",
+        "nv_nvfp4"
+      ],
+      "priority": 7,
+      "notes": "30B total / 3B active. Small and fast; NVIDIA's own NVFP4 build."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "revision": "da5b2650a835292c678994a1fa3fb653250fb508",
+      "role": "multimodal_triage / mid_reasoner",
+      "license": "openmdw-1.1",
+      "quant": "NVFP4",
+      "size_bytes": 75063309376,
+      "file_count": 113,
+      "groups": [
+        "new_small",
+        "nv_nvfp4"
+      ],
+      "priority": 8,
+      "notes": "120B total / 12B active hybrid Mamba-MoE, vision-language. Read the OpenMDW terms."
+    },
+    {
+      "repo_id": "XiaomiMiMo/MiMo-V2.6-Flash-RL",
+      "revision": "f657ba2f7d24c9adc5730675baaa2d34de878a49",
+      "role": "mid_reasoner / agent",
+      "license": "mit",
+      "quant": "FP8",
+      "size_bytes": 177767646145,
+      "file_count": 90,
+      "groups": [
+        "new_mid",
+        "osi_open"
+      ],
+      "priority": 9,
+      "notes": "Xiaomi MiMo V2.6 Flash (RL checkpoint). FP8, 1M context."
+    },
+    {
+      "repo_id": "MiniMaxAI/MiniMax-M3.1-Flash",
+      "revision": "2f33a8b9ae49ce7b51c994df97166a7fd059bc2e",
+      "role": "agent / coding",
+      "license": "minimax-community (non-commercial by default; commercial use needs attribution or authorisation)",
+      "quant": "MXFP8",
+      "size_bytes": 252446157672,
+      "file_count": 73,
+      "groups": [
+        "new_mid"
+      ],
+      "priority": 10,
+      "notes": "MiniMax M3.1 Flash, MXFP8. Check the licence before any commercial use."
+    },
+    {
+      "repo_id": "reflection/Beam-1.0-501B-A23B-NVFP4",
+      "revision": "c5621fc926758c3fb0a2944645760bcdc17cf084",
+      "role": "token_efficient_reasoner / coding_agent",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "size_bytes": 293654932296,
+      "file_count": 64,
+      "groups": [
+        "new_mid",
+        "osi_open"
+      ],
+      "priority": 11,
+      "notes": "Reflection Beam 1.0, 501B total / 23B active, text only, 1M context. BF16 and FP8 builds also exist."
+    },
+    {
+      "repo_id": "stepfun-ai/Step-5-Preview-NVFP4",
+      "revision": "bc246cc2848e17b37f377eda8fd825c5b3018d1f",
+      "role": "agent / reasoner",
+      "license": "stepfun-model-license-1.0 (attribution above 100M MAU or $20M monthly revenue)",
+      "quant": "NVFP4",
+      "size_bytes": 394175692861,
+      "file_count": 107,
+      "groups": [
+        "new_large"
+      ],
+      "priority": 12,
+      "notes": "StepFun Step 5 Preview, NVFP4."
+    },
+    {
+      "repo_id": "nvidia/GLM-5.3-NVFP4",
+      "revision": "e3b8f9f2fad29727dfa95e766c5cac18ea1414bf",
+      "role": "main_reasoner / coding",
+      "license": "nvidia-open-model-license (base model GLM-5.3 has its own custom licence; check both)",
+      "quant": "NVFP4",
+      "size_bytes": 464185096295,
+      "file_count": 60,
+      "groups": [
+        "new_large"
+      ],
+      "priority": 13,
+      "notes": "Full GLM-5.3 (the Flash variant is already in core3)."
+    },
+    {
+      "repo_id": "meta-models/Muse-Spark-Open-816B-A42B-NVFP4",
+      "revision": "4239e4db19376904f2e82c167e78f70abb5455fe",
+      "role": "general_reasoner",
+      "license": "muse-model-license (gated; 'Built with Muse Spark Open' attribution)",
+      "quant": "NVFP4",
+      "size_bytes": 533043429228,
+      "file_count": 141,
+      "groups": [
+        "new_large"
+      ],
+      "priority": 14,
+      "notes": "Meta Muse Spark Open, 816B total / 42B active. GATED with manual approval: accept the licence on the model page with your HF account and use a token.",
+      "gated": "manual",
+      "requires_token": true
+    },
+    {
+      "repo_id": "XiaomiMiMo/MiMo-V2.6-Pro-MOPD",
+      "revision": "da71ee15e76a8849bd1a9610195c452007a79678",
+      "role": "flagship_open_reasoner / agent",
+      "license": "mit",
+      "quant": "FP8",
+      "size_bytes": 573489512088,
+      "file_count": 155,
+      "groups": [
+        "new_large",
+        "osi_open"
+      ],
+      "priority": 15,
+      "notes": "Xiaomi MiMo V2.6 Pro, MOPD upgrade of MiMo-V2.6-Pro-RL (per its model card). FP8, omnimodal, 1M context."
+    },
+    {
+      "repo_id": "inclusionAI/Ling-3.1-flash-1019",
+      "revision": "3ec24e305c377d99623eb841f38928341c0e1562",
+      "role": "mid_reasoner / agent",
+      "license": "mit",
+      "quant": "FP8",
+      "size_bytes": 573813970013,
+      "file_count": 64,
+      "groups": [
+        "new_large",
+        "osi_open"
+      ],
+      "priority": 16,
+      "notes": "Ling 3.1 Flash (1019 checkpoint), FP8."
+    },
+    {
+      "repo_id": "mistralai/Mistral-Large-4-1T-A52B-NVFP4",
+      "revision": "bb6d00fe249b0e876f0cffc6b85014be02de3e68",
+      "role": "multimodal_flagship / long_context",
+      "license": "mistral-ecosystem-open-weight (modified MIT; Model-as-a-Service needs a separate licence)",
+      "quant": "NVFP4",
+      "size_bytes": 610105677691,
+      "file_count": 44,
+      "groups": [
+        "new_large"
+      ],
+      "priority": 17,
+      "notes": "1T total / ~49B active, multimodal input, 1M context. Card states it targets Blackwell incl. GB300."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB",
+      "revision": "1db54d5b12533ff1bcaa8e42cf4c667988a1f1be",
+      "role": "edge_assistant / on_device",
+      "license": "openmdw-1.1",
+      "quant": "GGUF Q4_K_M",
+      "size_bytes": 6210758019,
+      "file_count": 9,
+      "groups": [
+        "nv_edge"
+      ],
+      "priority": 18,
+      "notes": "Post-trained from Gemma-4-E4B-it (8B total, 4B effective). Single Q4_K_M GGUF for llama.cpp. Low memory, low time-to-first-token."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-BF16",
+      "revision": "49843eed8db1f1c616c47af75cfd36e07aec0667",
+      "role": "edge_assistant (full precision)",
+      "license": "openmdw-1.1",
+      "quant": "BF16",
+      "size_bytes": 16055376406,
+      "file_count": 18,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 19,
+      "notes": "Full-precision build of Bolt E4B, for fine-tuning or vLLM."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF",
+      "revision": "ba223d14e45525f7fae81db77ea8cabeb2fc6c25",
+      "role": "tiny_general / on_device",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "GGUF Q4_K_M",
+      "size_bytes": 2837140895,
+      "file_count": 8,
+      "groups": [
+        "nv_edge"
+      ],
+      "priority": 20,
+      "notes": "Nemotron 3 Nano 4B, single Q4_K_M GGUF."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Nano-4B-FP8",
+      "revision": "3fe6dab75665a93884214ad4b1b95cf02717d081",
+      "role": "tiny_general",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "FP8",
+      "size_bytes": 5284569483,
+      "file_count": 22,
+      "groups": [
+        "nv_fp8"
+      ],
+      "priority": 21,
+      "notes": "Nemotron 3 Nano 4B, FP8."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Nano-4B-BF16",
+      "revision": "dfaf35de3e30f1867dd8dbc38a7fc9fb52d3914f",
+      "role": "tiny_general",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 7964584688,
+      "file_count": 18,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 22,
+      "notes": "Nemotron 3 Nano 4B, BF16."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-GGUF",
+      "revision": "df53755cb8741843af8e019e088819fbef17e29b",
+      "role": "tiny_reasoner (looped LM) / research",
+      "license": "openmdw-1.1",
+      "quant": "GGUF Q5_K_M",
+      "size_bytes": 3674991426,
+      "file_count": 8,
+      "groups": [
+        "nv_edge"
+      ],
+      "priority": 23,
+      "notes": "Looped (latent-recurrent) 4B model, 256K context. Single Q5_K_M GGUF. Research release (Oct 2026)."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-BF16",
+      "revision": "f6c832e6963ddb74f62c75813a3e8c74b1af67b1",
+      "role": "tiny_reasoner (looped LM) / research",
+      "license": "openmdw-1.1",
+      "quant": "BF16",
+      "size_bytes": 7969485571,
+      "file_count": 14,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 24,
+      "notes": "Dory 1.0 4B, BF16."
+    },
+    {
+      "repo_id": "nvidia/Nemotron-Labs-Diffusion-3B",
+      "revision": "0d51902da1f8869f83413ce642fab402fa5641e0",
+      "role": "diffusion_lm / research",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 7795611587,
+      "file_count": 23,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 25,
+      "notes": "Tri-mode LM: autoregressive, diffusion and self-speculation decoding. Research."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Nano-9B-v2-NVFP4",
+      "revision": "8556c9164ddb43fe1f4f4ad730593b3c5e3f7328",
+      "role": "small_general / reasoning",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "size_bytes": 7852680821,
+      "file_count": 34,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "priority": 26,
+      "notes": "Nemotron Nano 9B v2, NVFP4 (Blackwell)."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Nano-9B-v2-FP8",
+      "revision": "8bc5eece2eb5514c4bca7f2ec655b91eb554f4c0",
+      "role": "small_general / reasoning",
+      "license": "nvidia-open-model-license",
+      "quant": "FP8",
+      "size_bytes": 10302627942,
+      "file_count": 37,
+      "groups": [
+        "nv_fp8"
+      ],
+      "priority": 27,
+      "notes": "Nemotron Nano 9B v2, FP8."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Nano-9B-v2",
+      "revision": "6533e8de2c68e4536bf7c411d7a3ce5734111476",
+      "role": "small_general / reasoning",
+      "license": "nvidia-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 17794616647,
+      "file_count": 22,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 28,
+      "notes": "Nemotron Nano 9B v2, BF16."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Nano-12B-v2-VL-NVFP4-QAD",
+      "revision": "16853d6c682223e967d5622c99d0082cb994b771",
+      "role": "small_vision_language",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "size_bytes": 10618593299,
+      "file_count": 32,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "priority": 29,
+      "notes": "Nano 12B v2 VL, NVFP4 with quantisation-aware distillation."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Nano-12B-v2-VL-BF16",
+      "revision": "ca9543b126e8bf3176916d3d305ccc415f89fd4d",
+      "role": "small_vision_language",
+      "license": "nvidia-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 26395869966,
+      "file_count": 54,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 30,
+      "notes": "Nano 12B v2 VL, BF16."
+    },
+    {
+      "repo_id": "nvidia/Nemotron-Labs-Diffusion-14B",
+      "revision": "f8c3e2c078e193599b8882d965b1001c456ba738",
+      "role": "diffusion_lm / research",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 27237782508,
+      "file_count": 23,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 31,
+      "notes": "Diffusion LM family, 14B. Research."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4",
+      "revision": "6efb4a2a1c1fa277ce7b3df7a1416255011b1c99",
+      "role": "mid_general / agent",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "NVFP4",
+      "size_bytes": 19362748714,
+      "file_count": 18,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "priority": 32,
+      "notes": "Nemotron 3 Nano 30B total / 3B active hybrid Mamba-Transformer MoE, NVFP4."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8",
+      "revision": "9bee19446c0dfd01f356e10979d225b2a6621944",
+      "role": "mid_general / agent",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "FP8",
+      "size_bytes": 32703351602,
+      "file_count": 38,
+      "groups": [
+        "nv_fp8"
+      ],
+      "priority": 33,
+      "notes": "Nemotron 3 Nano 30B-A3B, FP8."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "revision": "bf77c3174f68ad409e1c2aa60daeb46e32d1c606",
+      "role": "mid_general / agent",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 63174967188,
+      "file_count": 35,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 34,
+      "notes": "Nemotron 3 Nano 30B-A3B, BF16."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+      "revision": "a9904d24bcc1d289a1950fa9d2b978c47cf903b9",
+      "role": "small_fast_router (full precision)",
+      "license": "openmdw-1.1",
+      "quant": "BF16",
+      "size_bytes": 65845713051,
+      "file_count": 30,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 35,
+      "notes": "Lightning 30B-A3B, BF16 (the NVFP4 build is in new_small)."
+    },
+    {
+      "repo_id": "nvidia/Nemotron-Cascade-2-30B-A3B",
+      "revision": "6327cdbcf907e1c7cec9cb29fb6e6cebdf8feaf7",
+      "role": "math_code_reasoner",
+      "license": "nvidia-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 63177218531,
+      "file_count": 54,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 36,
+      "notes": "Post-trained from Nemotron-3-Nano-30B-A3B-Base. Card reports gold-medal level on IMO 2025 and IOI. Thinking and instruct modes."
+    },
+    {
+      "repo_id": "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-NVFP4",
+      "revision": "16993199e436da4ba75ddc410855f87e0d996ee6",
+      "role": "omni_multimodal (video/audio/image/text in)",
+      "license": "nvidia-open-model-agreement",
+      "quant": "NVFP4",
+      "size_bytes": 22431648055,
+      "file_count": 26,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "priority": 37,
+      "notes": "31B total / ~3B active. Card lists 1x RTX 5090 32GB as minimum for NVFP4."
+    },
+    {
+      "repo_id": "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-FP8",
+      "revision": "0acd4b1c237eab45d3977b1b46631919e9a75774",
+      "role": "omni_multimodal",
+      "license": "nvidia-open-model-agreement",
+      "quant": "FP8",
+      "size_bytes": 35205010484,
+      "file_count": 27,
+      "groups": [
+        "nv_fp8"
+      ],
+      "priority": 38,
+      "notes": "Card lists 1x L40S 48GB as minimum for FP8."
+    },
+    {
+      "repo_id": "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16",
+      "revision": "e5e9932441de940c9a62185c870ea5bcd4cd24e2",
+      "role": "omni_multimodal",
+      "license": "nvidia-open-model-agreement",
+      "quant": "BF16",
+      "size_bytes": 66059015562,
+      "file_count": 50,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 39,
+      "notes": "Card lists 1x H100 80GB as minimum for BF16."
+    },
+    {
+      "repo_id": "nvidia/Llama-3_3-Nemotron-Super-49B-v1_5-NVFP4",
+      "revision": "f0caaafd5152e07527c7a14e04aa67823107529f",
+      "role": "mid_reasoner (2025)",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "size_bytes": 31090449011,
+      "file_count": 26,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "priority": 40,
+      "notes": "Older (2025) 49B dense. Built on Llama 3.3, so check the Llama licence terms as well."
+    },
+    {
+      "repo_id": "nvidia/Llama-3_3-Nemotron-Super-49B-v1_5-FP8",
+      "revision": "04822723e77e036ddf2d24e83c6d469d3b009252",
+      "role": "mid_reasoner (2025)",
+      "license": "nvidia-open-model-license",
+      "quant": "FP8",
+      "size_bytes": 51987427013,
+      "file_count": 30,
+      "groups": [
+        "nv_fp8"
+      ],
+      "priority": 41,
+      "notes": "Older (2025) 49B dense. Built on Llama 3.3, so check the Llama licence terms as well."
+    },
+    {
+      "repo_id": "nvidia/Llama-3_3-Nemotron-Super-49B-v1_5",
+      "revision": "420ba7d28211abf116b8b103ab700d92619daf98",
+      "role": "mid_reasoner (2025)",
+      "license": "nvidia-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 99752287956,
+      "file_count": 47,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 42,
+      "notes": "Older (2025) 49B dense. Built on Llama 3.3, so check the Llama licence terms as well."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB",
+      "revision": "cf2effc5c4b794ee9fb8d34eab3d1d65ce64142f",
+      "role": "local_agent_vlm (fits 24GB)",
+      "license": "openmdw-1.1",
+      "quant": "IQ2 QAT (2-bit)",
+      "size_bytes": 24120362146,
+      "file_count": 118,
+      "groups": [
+        "nv_edge"
+      ],
+      "priority": 43,
+      "notes": "74B total / 9B active vision-language model with native 2-bit quantisation-aware training, packed to fit 24GB. Card: vLLM on A100, H100-80GB or Blackwell."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB-GGUF",
+      "revision": "e0fecb69cb3e5e4c5e8a056fa2aec98c78e91246",
+      "role": "local_agent_vlm (fits 24GB)",
+      "license": "openmdw-1.1",
+      "quant": "GGUF IQ2",
+      "size_bytes": 23752961396,
+      "file_count": 10,
+      "groups": [
+        "nv_edge"
+      ],
+      "priority": 44,
+      "notes": "Same model as GGUF (main file 22.0GB plus a 1.7GB vision projector).",
+      "gguf_variants": [
+        {
+          "id": "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB",
+          "label": "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB",
+          "files": [
+            "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB.gguf"
+          ],
+          "size_bytes": 22018326528
+        },
+        {
+          "id": "mmproj-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB",
+          "label": "mmproj-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB",
+          "files": [
+            "mmproj-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB.gguf"
+          ],
+          "size_bytes": 1733692736,
+          "note": "vision projector, needed for image input"
+        }
+      ],
+      "base_bytes": 942132
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
+      "revision": "ff433f5493e25d631c9f12b5d55c674229923d02",
+      "role": "large_general / agent",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "NVFP4",
+      "size_bytes": 80365684262,
+      "file_count": 36,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "priority": 45,
+      "notes": "Nemotron 3 Super 120B total / 12B active, NVFP4."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8",
+      "revision": "744b1880a37996c5d56bf454ae164dfd74d77c4e",
+      "role": "large_general / agent",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "FP8",
+      "size_bytes": 128379949011,
+      "file_count": 45,
+      "groups": [
+        "nv_fp8"
+      ],
+      "priority": 46,
+      "notes": "Nemotron 3 Super 120B-A12B, FP8."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+      "revision": "2dc98e2afe4face0e4ce40972a915c45368bd34a",
+      "role": "large_general / agent",
+      "license": "nvidia-nemotron-open-model-license",
+      "quant": "BF16",
+      "size_bytes": 247249438750,
+      "file_count": 75,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 47,
+      "notes": "Nemotron 3 Super 120B-A12B, BF16."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
+      "revision": "fb0ee0bc6b3f70342afd8d84cb80dbadbaa8a1fe",
+      "role": "large_vision_language",
+      "license": "openmdw-1.1",
+      "quant": "BF16",
+      "size_bytes": 248937282385,
+      "file_count": 88,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 48,
+      "notes": "Super VL 120B-A12B, BF16 (the NVFP4 build is in new_small)."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4",
+      "revision": "02462641f13d3af838b904f48195b9bb8a1e4ebc",
+      "role": "heavy_flagship",
+      "license": "openmdw-1.1",
+      "quant": "NVFP4",
+      "size_bytes": 352381245755,
+      "file_count": 243,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "priority": 49,
+      "notes": "Nemotron 3 Ultra, 550B total / 55B active, NVFP4."
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "revision": "77df655d5e9f8362164ed14dd8b48f8bce657498",
+      "role": "heavy_flagship",
+      "license": "openmdw-1.1",
+      "quant": "BF16",
+      "size_bytes": 1121078448762,
+      "file_count": 241,
+      "groups": [
+        "nv_bf16"
+      ],
+      "priority": 50,
+      "notes": "Nemotron 3 Ultra, BF16 (about 1.1 TB)."
+    },
+    {
+      "repo_id": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+      "revision": "1355db6a052410cfd62085d94b58866fd0f2c3c5",
+      "role": "third_party: Qwen3.6-35B-A3B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3.6-35B-A3B",
+      "size_bytes": 23462477857,
+      "file_count": 17,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3.6-35B-A3B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 51
+    },
+    {
+      "repo_id": "nvidia/Qwen3.6-27B-NVFP4",
+      "revision": "0893e1606ff3d5f97a441f405d5fc541a6bdf404",
+      "role": "third_party: Qwen3.6-27B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3.6-27B",
+      "size_bytes": 21941623844,
+      "file_count": 17,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3.6-27B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 52
+    },
+    {
+      "repo_id": "nvidia/Qwen3.5-122B-A10B-NVFP4",
+      "revision": "98915d837c4e7c87ac8296d02e89de19b3207e6d",
+      "role": "third_party: Qwen3.5-122B-A10B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3.5-122B-A10B",
+      "size_bytes": 83531051042,
+      "file_count": 21,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3.5-122B-A10B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 53
+    },
+    {
+      "repo_id": "nvidia/Qwen3.5-397B-A17B-NVFP4-V2",
+      "revision": "8f590eae8f10bf55d9a46f79ea0280bde435c9f8",
+      "role": "third_party: Qwen3.5-397B-A17B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3.5-397B-A17B",
+      "size_bytes": 243652883244,
+      "file_count": 37,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3.5-397B-A17B (not an NVIDIA model). The base model's own licence also applies. V2 build; the first NVFP4 build (without -V2) is not included.",
+      "priority": 54
+    },
+    {
+      "repo_id": "nvidia/Qwen3-Coder-480B-A35B-Instruct-NVFP4",
+      "revision": "7cd997a9ba42019dd3da402a106744f9b50d26c6",
+      "role": "third_party: Qwen3-Coder-480B-A35B-Instruct",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+      "size_bytes": 272901500687,
+      "file_count": 68,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-Coder-480B-A35B-Instruct (not an NVIDIA model). The base model's own licence also applies. Code model; the base model dates from 2025, the NVFP4 build from Jan 2026.",
+      "priority": 55
+    },
+    {
+      "repo_id": "nvidia/Qwen3.8-Flash-Next-FP4-Local",
+      "revision": "b9ce18a6887e18c089fdea8509a33e63429a3300",
+      "role": "third_party: Qwen3.8-Flash-Next",
+      "license": "nvidia-open-model-agreement",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3.8-Flash-Next",
+      "size_bytes": 102262310289,
+      "file_count": 33,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3.8-Flash-Next (not an NVIDIA model). The base model's own licence also applies. 'Local' build: the NVFP4 scale factors use a new lossless compression format that upstream vLLM does not support yet, so you must use the containers named on the model card. Card: about 96 GiB on disk; validated on RTX PRO 6000 Blackwell and DGX Spark.",
+      "priority": 56
+    },
+    {
+      "repo_id": "nvidia/Qwen3.8-2.4T-A95B-NVFP4",
+      "revision": "74eb734297318ecf7c48016a4ac8ce1b47cc74a9",
+      "role": "third_party: Qwen3.8-2.4T-A95B",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3.8-2.4T-A95B",
+      "size_bytes": 1444563600415,
+      "file_count": 210,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3.8-2.4T-A95B (not an NVIDIA model). The base model's own licence also applies. Very large (about 1.4 TB).",
+      "priority": 57
+    },
+    {
+      "repo_id": "nvidia/Gemma-4-26B-A4B-NVFP4",
+      "revision": "a19cfe00be84568a6867111c9a68c9c44fdcffe6",
+      "role": "third_party: gemma-4-26B-A4B-it",
+      "license": "apache-license-2.0",
+      "quant": "NVFP4",
+      "base_model": "google/gemma-4-26B-A4B-it",
+      "size_bytes": 18825679760,
+      "file_count": 12,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of google/gemma-4-26B-A4B-it (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 58
+    },
+    {
+      "repo_id": "nvidia/Gemma-4-31B-IT-NVFP4",
+      "revision": "4135a98a9b728a548947683219633b25682223ac",
+      "role": "third_party: gemma-4-31B-it",
+      "license": "apache-license-2.0",
+      "quant": "NVFP4",
+      "base_model": "google/gemma-4-31B-it",
+      "size_bytes": 32666144105,
+      "file_count": 15,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of google/gemma-4-31B-it (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 59
+    },
+    {
+      "repo_id": "nvidia/diffusiongemma-26B-A4B-it-NVFP4",
+      "revision": "ec4ff3df205028f4e81c954c2227f9312b3ec2ea",
+      "role": "third_party: diffusiongemma-26B-A4B-it",
+      "license": "apache-license-2.0",
+      "quant": "NVFP4",
+      "base_model": "google/diffusiongemma-26B-A4B-it",
+      "size_bytes": 18864432762,
+      "file_count": 14,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of google/diffusiongemma-26B-A4B-it (not an NVIDIA model). The base model's own licence also applies. Diffusion-decoding Gemma variant.",
+      "priority": 60
+    },
+    {
+      "repo_id": "nvidia/Kimi-K2.5-NVFP4",
+      "revision": "0fd0a5e6879298d3476e3b61852a79792a35ae3d",
+      "role": "third_party: Kimi-K2.5",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "moonshotai/Kimi-K2.5",
+      "size_bytes": 590850973287,
+      "file_count": 140,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of moonshotai/Kimi-K2.5 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 61
+    },
+    {
+      "repo_id": "nvidia/Kimi-K2.6-NVFP4",
+      "revision": "2fd3a800dedd098b8327eb49e93ebc75f85da19f",
+      "role": "third_party: Kimi-K2.6",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "moonshotai/Kimi-K2.6",
+      "size_bytes": 595219158578,
+      "file_count": 81,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of moonshotai/Kimi-K2.6 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 62
+    },
+    {
+      "repo_id": "nvidia/Kimi-K2.7-Code-NVFP4",
+      "revision": "9f28d60908c98034bb288e755566764eac77cc0d",
+      "role": "third_party: Kimi-K2.7-Code",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "moonshotai/Kimi-K2.7-Code",
+      "size_bytes": 595219730754,
+      "file_count": 87,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of moonshotai/Kimi-K2.7-Code (not an NVIDIA model). The base model's own licence also applies. Code model.",
+      "priority": 63
+    },
+    {
+      "repo_id": "nvidia/Kimi-K3-NVFP4",
+      "revision": "b2428a0b83a8b712ff2e1a8448a103d4175341f1",
+      "role": "third_party: Kimi-K3",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "moonshotai/Kimi-K3",
+      "size_bytes": 1610039528856,
+      "file_count": 116,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of moonshotai/Kimi-K3 (not an NVIDIA model). The base model's own licence also applies. About 1.6 TB; Kimi K3.1 Pro (post-trained K3) weights were announced but are not on the Hub yet.",
+      "priority": 64
+    },
+    {
+      "repo_id": "nvidia/GLM-4.7-NVFP4",
+      "revision": "47fa7dc885a174b67af8eb53d3cd4f9c72f0fbf7",
+      "role": "third_party: GLM-4.7",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "zai-org/GLM-4.7",
+      "size_bytes": 229952846481,
+      "file_count": 55,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of zai-org/GLM-4.7 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 65
+    },
+    {
+      "repo_id": "nvidia/GLM-5-NVFP4",
+      "revision": "dc54ff55a7e9e71b85db953d8bc22eca894b44c6",
+      "role": "third_party: GLM-5",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "zai-org/GLM-5",
+      "size_bytes": 480794006899,
+      "file_count": 293,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of zai-org/GLM-5 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 66
+    },
+    {
+      "repo_id": "nvidia/GLM-5.1-NVFP4",
+      "revision": "9116eb1c3ef24dd38dfe61e2eb71399ddd8070c8",
+      "role": "third_party: GLM-5.1",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "zai-org/GLM-5.1",
+      "size_bytes": 465942827474,
+      "file_count": 59,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of zai-org/GLM-5.1 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 67
+    },
+    {
+      "repo_id": "nvidia/GLM-5.2-NVFP4",
+      "revision": "53e0691e21895a3863a606dfd12910c69eba94ab",
+      "role": "third_party: GLM-5.2",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "zai-org/GLM-5.2",
+      "size_bytes": 464865497067,
+      "file_count": 56,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of zai-org/GLM-5.2 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 68
+    },
+    {
+      "repo_id": "nvidia/GLM-5.3-Flash-FP4-Local",
+      "revision": "76348ddb2be2e35e39ecfc00e75dc07703f4f3d5",
+      "role": "third_party: GLM-5.3-Flash",
+      "license": "nvidia-open-model-agreement",
+      "quant": "NVFP4",
+      "base_model": "zai-org/GLM-5.3-Flash",
+      "size_bytes": 177519524972,
+      "file_count": 52,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of zai-org/GLM-5.3-Flash (not an NVIDIA model). The base model's own licence also applies. 'Local' build: the NVFP4 scale factors use a new lossless compression format that upstream vLLM does not support yet, so you must use the containers named on the model card.",
+      "priority": 69
+    },
+    {
+      "repo_id": "nvidia/DeepSeek-V4-Flash-NVFP4",
+      "revision": "e3cd60e7de98e9867116860d522499a728de1cf9",
+      "role": "third_party: DeepSeek-V4-Flash",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "deepseek-ai/DeepSeek-V4-Flash",
+      "size_bytes": 168305308121,
+      "file_count": 76,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of deepseek-ai/DeepSeek-V4-Flash (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 70
+    },
+    {
+      "repo_id": "nvidia/DeepSeek-V4-Flash-0731-NVFP4",
+      "revision": "f1caa71142bd0be02f728c79f75042ac1e461579",
+      "role": "third_party: DeepSeek-V4-Flash-0731",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "size_bytes": 175568764416,
+      "file_count": 75,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of deepseek-ai/DeepSeek-V4-Flash-0731 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 71
+    },
+    {
+      "repo_id": "nvidia/DeepSeek-V4-Pro-NVFP4",
+      "revision": "1449d1e641023406daf6b432361486c768aad740",
+      "role": "third_party: DeepSeek-V4-Pro",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "deepseek-ai/DeepSeek-V4-Pro",
+      "size_bytes": 913128322951,
+      "file_count": 93,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of deepseek-ai/DeepSeek-V4-Pro (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 72
+    },
+    {
+      "repo_id": "nvidia/DeepSeek-V4-Pro-0813-NVFP4",
+      "revision": "949138637e8e8fe190335be2396af62187dc8a83",
+      "role": "third_party: DeepSeek-V4-Pro-0813",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+      "size_bytes": 941146494962,
+      "file_count": 93,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of deepseek-ai/DeepSeek-V4-Pro-0813 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 73
+    },
+    {
+      "repo_id": "nvidia/MiniMax-M2.5-NVFP4",
+      "revision": "b6220d658389629b9d507d4b2bb314f41fea7898",
+      "role": "third_party: MiniMax-M2.5",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "MiniMaxAI/MiniMax-M2.5",
+      "size_bytes": 139923512451,
+      "file_count": 44,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of MiniMaxAI/MiniMax-M2.5 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 74
+    },
+    {
+      "repo_id": "nvidia/MiniMax-M2.7-NVFP4",
+      "revision": "e79701cb1f9dce8fe5395b9ed2b20170beebecde",
+      "role": "third_party: MiniMax-M2.7",
+      "license": "nvidia-software-and-model-evaluation-license",
+      "quant": "NVFP4",
+      "base_model": "MiniMaxAI/MiniMax-M2.7",
+      "size_bytes": 139923895041,
+      "file_count": 30,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of MiniMaxAI/MiniMax-M2.7 (not an NVIDIA model). The base model's own licence also applies. Licence on the repo is the NVIDIA software and model evaluation licence; read it.",
+      "priority": 75
+    },
+    {
+      "repo_id": "nvidia/MiniMax-M3-NVFP4",
+      "revision": "901464083161bf8612a29ff7ad29914cd4ab4a85",
+      "role": "third_party: MiniMax-M3",
+      "license": "minimax-community-license",
+      "quant": "NVFP4",
+      "base_model": "MiniMaxAI/MiniMax-M3",
+      "size_bytes": 250137296832,
+      "file_count": 107,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of MiniMaxAI/MiniMax-M3 (not an NVIDIA model). The base model's own licence also applies. Base licence is MiniMax community (non-commercial by default).",
+      "priority": 76
+    },
+    {
+      "repo_id": "nvidia/Mistral-Medium-3.5-128B-NVFP4",
+      "revision": "b8c66d2098edd8c9c26bde2b2ff41b5967e111ae",
+      "role": "third_party: Mistral-Medium-3.5-128B",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "mistralai/Mistral-Medium-3.5-128B",
+      "size_bytes": 95259207898,
+      "file_count": 22,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of mistralai/Mistral-Medium-3.5-128B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 77
+    },
+    {
+      "repo_id": "nvidia/Muse-Glimmer-30B-NVFP4",
+      "revision": "47818374517751c48c55cde2621594926b1888b6",
+      "role": "third_party: Muse-Glimmer-30B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "meta-models/Muse-Glimmer-30B",
+      "size_bytes": 24698226650,
+      "file_count": 15,
+      "groups": [
+        "nvq_current"
+      ],
+      "notes": "NVIDIA's NVFP4 build of meta-models/Muse-Glimmer-30B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 78
+    },
+    {
+      "repo_id": "nvidia/Qwen2.5-VL-7B-Instruct-NVFP4",
+      "revision": "d13bb1f2d8fbbd9f16cbb7688c8d6b6932d797d7",
+      "role": "third_party: Qwen2.5-VL-7B-Instruct",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen2.5-VL-7B-Instruct",
+      "size_bytes": 7220464249,
+      "file_count": 18,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen2.5-VL-7B-Instruct (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 79
+    },
+    {
+      "repo_id": "nvidia/Qwen3-8B-NVFP4",
+      "revision": "ccd10a893cbca613259517c3efe08e151ddf2b8e",
+      "role": "third_party: Qwen3-8B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-8B",
+      "size_bytes": 6413063143,
+      "file_count": 15,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-8B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 80
+    },
+    {
+      "repo_id": "nvidia/Qwen3-14B-NVFP4",
+      "revision": "bc39319a4dc265d9bbb9a9731bc52c4988d9ece7",
+      "role": "third_party: Qwen3-14B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-14B",
+      "size_bytes": 10560440187,
+      "file_count": 16,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-14B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 81
+    },
+    {
+      "repo_id": "nvidia/Qwen3-32B-NVFP4",
+      "revision": "16426c6eb87be9e27c14cc9fb318f9c7a5f8588c",
+      "role": "third_party: Qwen3-32B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-32B",
+      "size_bytes": 20682484222,
+      "file_count": 18,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-32B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 82
+    },
+    {
+      "repo_id": "nvidia/Qwen3-30B-A3B-NVFP4",
+      "revision": "2538ded2a4edb247b4d2b4a8ba24e44bd4c017c3",
+      "role": "third_party: Qwen3-30B-A3B",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-30B-A3B",
+      "size_bytes": 18119337334,
+      "file_count": 18,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-30B-A3B (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 83
+    },
+    {
+      "repo_id": "nvidia/Qwen3-235B-A22B-Instruct-2507-NVFP4",
+      "revision": "1c4ec35802abf3a20672be7e5c51a098796f71d6",
+      "role": "third_party: Qwen3-235B-A22B-Instruct-2507",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+      "size_bytes": 139249459981,
+      "file_count": 41,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-235B-A22B-Instruct-2507 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 84
+    },
+    {
+      "repo_id": "nvidia/Qwen3-235B-A22B-Thinking-2507-NVFP4",
+      "revision": "963445d1b9d3318cae13a4477bdfae4c2c6dab1e",
+      "role": "third_party: Qwen3-235B-A22B-Thinking-2507",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-235B-A22B-Thinking-2507",
+      "size_bytes": 139249459972,
+      "file_count": 41,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-235B-A22B-Thinking-2507 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 85
+    },
+    {
+      "repo_id": "nvidia/Qwen3-Next-80B-A3B-Instruct-NVFP4",
+      "revision": "8fb2682f136cf94d932a498f18cb1e428832a912",
+      "role": "third_party: Qwen3-Next-80B-A3B-Instruct",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+      "size_bytes": 50802129136,
+      "file_count": 24,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-Next-80B-A3B-Instruct (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 86
+    },
+    {
+      "repo_id": "nvidia/Qwen3-Next-80B-A3B-Thinking-NVFP4",
+      "revision": "2adcdd3e2482cd6fa1676b4f8e6f459a28796f08",
+      "role": "third_party: Qwen3-Next-80B-A3B-Thinking",
+      "license": "apache-2.0",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-Next-80B-A3B-Thinking",
+      "size_bytes": 50802130558,
+      "file_count": 24,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-Next-80B-A3B-Thinking (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 87
+    },
+    {
+      "repo_id": "nvidia/Qwen3-VL-235B-A22B-Instruct-NVFP4",
+      "revision": "871d38d02226334efbf047f7186f57c64a146ac4",
+      "role": "third_party: Qwen3-VL-235B-A22B-Instruct",
+      "license": "see base model",
+      "quant": "NVFP4",
+      "base_model": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+      "size_bytes": 135306045356,
+      "file_count": 44,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of Qwen/Qwen3-VL-235B-A22B-Instruct (not an NVIDIA model). The base model's own licence also applies. Licence field is empty on the repo; see the base model.",
+      "priority": 88
+    },
+    {
+      "repo_id": "nvidia/Kimi-K2-Thinking-NVFP4",
+      "revision": "fdb56e078abe797d1710b102d0acf62bb8aee90b",
+      "role": "third_party: Kimi-K2-Thinking",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "moonshotai/Kimi-K2-Thinking",
+      "size_bytes": 594268286779,
+      "file_count": 133,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of moonshotai/Kimi-K2-Thinking (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 89
+    },
+    {
+      "repo_id": "nvidia/DeepSeek-V3.2-NVFP4",
+      "revision": "7c0f62c6da1da0c81c6e097010cc55854d206812",
+      "role": "third_party: DeepSeek-V3.2",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "deepseek-ai/DeepSeek-V3.2",
+      "size_bytes": 415081355510,
+      "file_count": 177,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of deepseek-ai/DeepSeek-V3.2 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 90
+    },
+    {
+      "repo_id": "nvidia/DeepSeek-R1-0528-NVFP4-v2",
+      "revision": "25a138f28f49022958b9f2d205f9b7de0cdb6e18",
+      "role": "third_party: DeepSeek-R1-0528",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "deepseek-ai/DeepSeek-R1-0528",
+      "size_bytes": 413340546112,
+      "file_count": 174,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of deepseek-ai/DeepSeek-R1-0528 (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 91
+    },
+    {
+      "repo_id": "nvidia/Llama-3.1-8B-Instruct-NVFP4",
+      "revision": "bdb54e24298451af785c0ac63c1b485e9b7400a2",
+      "role": "third_party: Llama-3.1-8B-Instruct",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "meta-llama/Llama-3.1-8B-Instruct",
+      "size_bytes": 6045296898,
+      "file_count": 13,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of meta-llama/Llama-3.1-8B-Instruct (not an NVIDIA model). The base model's own licence also applies. Llama community licence applies.",
+      "priority": 92
+    },
+    {
+      "repo_id": "nvidia/Llama-3.3-70B-Instruct-NVFP4",
+      "revision": "f792b707002f2c613e0729c6b37bbcedc4efa94e",
+      "role": "third_party: Llama-3.3-70B-Instruct",
+      "license": "llama3.3",
+      "quant": "NVFP4",
+      "base_model": "meta-llama/Llama-3.3-70B-Instruct",
+      "size_bytes": 42726969831,
+      "file_count": 19,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of meta-llama/Llama-3.3-70B-Instruct (not an NVIDIA model). The base model's own licence also applies. Llama community licence applies.",
+      "priority": 93
+    },
+    {
+      "repo_id": "nvidia/Llama-3.1-405B-Instruct-NVFP4",
+      "revision": "8ddfc523e75da0cd52d8d486895aa984282f6db9",
+      "role": "third_party: Llama-3.1-405B-Instruct",
+      "license": "llama3.1",
+      "quant": "NVFP4",
+      "base_model": "meta-llama/Llama-3.1-405B-Instruct",
+      "size_bytes": 234349955497,
+      "file_count": 59,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of meta-llama/Llama-3.1-405B-Instruct (not an NVIDIA model). The base model's own licence also applies. Llama community licence applies.",
+      "priority": 94
+    },
+    {
+      "repo_id": "nvidia/Llama-4-Scout-17B-16E-Instruct-NVFP4",
+      "revision": "9417590c9bc99b359f3ac66d1346ecd54249888e",
+      "role": "third_party: Llama-4-Scout-17B-16E-Instruct",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+      "size_bytes": 65377435707,
+      "file_count": 26,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of meta-llama/Llama-4-Scout-17B-16E-Instruct (not an NVIDIA model). The base model's own licence also applies. Gated (auto-approval after accepting the Llama licence on the model page): a token is required.",
+      "gated": "auto",
+      "requires_token": true,
+      "priority": 95
+    },
+    {
+      "repo_id": "nvidia/Phi-4-multimodal-instruct-NVFP4",
+      "revision": "617cfabb9ad6c2c6e318fd21c1961536b84f65a1",
+      "role": "third_party: Phi-4-multimodal-instruct",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "base_model": "microsoft/Phi-4-multimodal-instruct",
+      "size_bytes": 8979471255,
+      "file_count": 37,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of microsoft/Phi-4-multimodal-instruct (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 96
+    },
+    {
+      "repo_id": "nvidia/Phi-4-reasoning-plus-NVFP4",
+      "revision": "cb950fd61cdbfa8e0f467ace3087c7d32ea8a47b",
+      "role": "third_party: Phi-4-reasoning-plus",
+      "license": "mit",
+      "quant": "NVFP4",
+      "base_model": "microsoft/Phi-4-reasoning-plus",
+      "size_bytes": 9733620488,
+      "file_count": 14,
+      "groups": [
+        "nvq_legacy"
+      ],
+      "notes": "NVIDIA's NVFP4 build of microsoft/Phi-4-reasoning-plus (not an NVIDIA model). The base model's own licence also applies.",
+      "priority": 97
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-NVFP4",
+      "revision": "1d370e47fbc56d1019a471c2339663cdbbb5236f",
+      "role": "compressed_large_reasoner",
+      "license": "openmdw-1.1",
+      "quant": "NVFP4",
+      "size_bytes": 53545340845,
+      "file_count": 24,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "notes": "75.3B total / 9.3B active, derived from Nemotron-3-Super-120B-A12B with a post-training compression method; card claims higher throughput on 8xB200.",
+      "priority": 98
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Labs-3-Competitive-Coding-550B-A55B-NVFP4",
+      "revision": "3ae22c58ada5f3f3902ed00628a7839cf8584f3a",
+      "role": "competitive_programming_specialist",
+      "license": "openmdw-1.1",
+      "quant": "NVFP4",
+      "size_bytes": 352385832892,
+      "file_count": 238,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "notes": "Based on Nemotron-3-Ultra. Specialist for competitive programming (C++ answers), not a general chat or agent model.",
+      "priority": 99
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Labs-3-Elastic-30B-A3B-NVFP4",
+      "revision": "a8b6f7c6dba58fe7171b1b2176db05c3f69436da",
+      "role": "elastic_mid_general",
+      "license": "nvidia-open-model-license",
+      "quant": "NVFP4",
+      "size_bytes": 19369577621,
+      "file_count": 39,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "notes": "Three nested variants (30B / 23B / 12B) in one checkpoint; the smaller ones are extracted with the slicing script on the card.",
+      "priority": 100
+    },
+    {
+      "repo_id": "nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-NVFP4",
+      "revision": "64b4039a3468bef85c6744c1e24d5a80801fe965",
+      "role": "tiny_reasoner (looped LM) / research",
+      "license": "openmdw-1.1",
+      "quant": "NVFP4",
+      "size_bytes": 3221468847,
+      "file_count": 15,
+      "groups": [
+        "nv_nvfp4"
+      ],
+      "notes": "Dory 1.0 4B, NVFP4.",
+      "priority": 101
+    },
+    {
+      "repo_id": "Kujira/Underdog-Saluki-27B-1.0-MTP-Abliterated-GGUF",
+      "revision": "c1d826d73831efcb819d9d64c625f0fab56ae8fc",
+      "role": "community_modified: Underdog Saluki 27B (refusals removed) / llama.cpp",
+      "license": "apache-2.0",
+      "quant": "GGUF IQ2",
+      "base_model": "ConwayResearch/Underdog-Saluki-27B-1.0",
+      "size_bytes": 8349711737,
+      "file_count": 5,
+      "groups": [
+        "community"
+      ],
+      "priority": 102,
+      "notes": "Unofficial community build. Single IQ2-mix GGUF (8.35 GB) with the MTP head, for llama.cpp MTP self-speculative decoding (--spec-type draft-mtp). Per the card, 4 tensors were edited to remove refusals (no training; method unpublished); everything else is byte-identical to the MTP release. Card: a 12 GB GPU fits 40K context. Modified by a third party: not vetted by the base model's vendor."
+    },
+    {
+      "repo_id": "Kujira/Swift-1.5-Qwen3.8-27B-CHiPS-Uncensored-GSQ-RCO-MTP-GGUF",
+      "revision": "7705dafa20badee3c2b9927339450f12ae1d0afc",
+      "role": "community_modified: Swift 1.5 Qwen3.8-27B (refusals reduced) / llama.cpp",
+      "license": "swift-open-license-1.0 (+ Apache-2.0 files in the repo)",
+      "quant": "GGUF IQ2_XS + IQ3_S",
+      "base_model": "ukisai/Swift-1.5-Qwen3.8-27B-GSQ-RCO-GGUF",
+      "size_bytes": 20891376554,
+      "file_count": 8,
+      "groups": [
+        "community"
+      ],
+      "priority": 103,
+      "notes": "Unofficial community build, explicitly not an official UkisAI release. Two GGUF files (IQ2_XS 8.77 GB and IQ3_S 12.12 GB) with MTP head; 4 tensors edited (method 'CHiPS', recipe unpublished) to reduce refusals. Card's evaluation covers only the IQ2_XS file; IQ3_S has the same edit but was not evaluated. Repo was created 2026-11-02 and had no downloads or likes when checked. Modified by a third party: not vetted by the base model's vendor.",
+      "gguf_variants": [
+        {
+          "id": "Swift-1.5-Qwen3.8-27B-CHiPS-Uncensored-GSQ-RCO-IQ2_XS-mtp",
+          "label": "IQ2_XS-mtp",
+          "files": [
+            "Swift-1.5-Qwen3.8-27B-CHiPS-Uncensored-GSQ-RCO-IQ2_XS-mtp.gguf"
+          ],
+          "size_bytes": 8771311840
+        },
+        {
+          "id": "Swift-1.5-Qwen3.8-27B-CHiPS-Uncensored-GSQ-RCO-IQ3_S-mtp",
+          "label": "IQ3_S-mtp",
+          "files": [
+            "Swift-1.5-Qwen3.8-27B-CHiPS-Uncensored-GSQ-RCO-IQ3_S-mtp.gguf"
+          ],
+          "size_bytes": 12120017120
+        }
+      ],
+      "base_bytes": 47594
+    }
+  ],
+  "size_source": "Sum of file sizes at the pinned revision, measured via the HF API on 2026-11-03. size_bytes_original on the first six entries is the value in the first-draft manifest (GLM-5.3-Flash and Gemma 4 were over-stated).",
+  "candidates_checked_not_added": {
+    "moonshotai Kimi K3 (nvidia/Kimi-K3-NVFP4)": "1.61 TB; Kimi K3.1 Pro weights were announced for release by Nov 4, so add that instead once it is on the Hub",
+    "nvidia/Qwen3.8-2.4T-A95B-NVFP4": "1.44 TB, very large",
+    "nvidia/DeepSeek-V4-Pro-0813-NVFP4": "941 GB; the smaller DeepSeek V4.1 Flash already in core3 is newer",
+    "openai/gpt-oss-120b": "Aug 2025 model; the repo ships duplicate original/ and metal/ copies (196 GB) which this downloader would fetch in full",
+    "tencent/Hy4-preview": "1.56 TB unquantised preview",
+    "NVIDIA non-LLM models": "Embedding, reranker, ASR/TTS, document parse, content safety, Cosmos and Alpamayo models were left out: this list is for chat/reasoning LLMs and VLMs",
+    "NVIDIA *-Base-* checkpoints and DFlash/Eagle drafters": "Base models and speculative-decoding drafters are not standalone assistants",
+    "nvidia/NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB-LiLiCorr-GGUF": "1 GB companion file, not a standalone model",
+    "NVIDIA NVFP4 builds superseded by a newer build already listed": "DeepSeek-V4.1-Flash-NVFP4 (Sept build; the 1017 build is in core3), Qwen3.5-397B-A17B-NVFP4 (first build; -V2 is listed), DeepSeek-R1 / R1-NVFP4-v2 / R1-0528-NVFP4 (R1-0528-NVFP4-v2 is listed), DeepSeek-V3-0324 and V3.1 (V3.2 is listed), Qwen3-235B-A22B-NVFP4 (the 2507 Instruct/Thinking builds are listed)",
+    "nvidia/Ising-Calibration-1.5-31B-NVFP4": "NVIDIA model for quantum-computing calibration plots (Gemma 4 31B based); not a general model",
+    "NVIDIA NVFP4 benchmark and drafter variants": "Qwen3-VL-235B ...-MLPerf-Inference-Closed-*, *-DSpark, *-Eagle3, *-DFlash drafters",
+    "NVIDIA NVFP4 image / video / embedding / speech models": "Qwen-Image-NVFP4, Wan2.2-T2V-A14B-NVFP4, Nemotron embed and transcribe models"
+  }
+}

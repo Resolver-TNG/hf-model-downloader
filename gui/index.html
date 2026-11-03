@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="session-key" content="__SESSION_KEY__">
+<title>HF モデル一括ダウンロード</title>
+<style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --fg: #1d2330; --muted: #657084; --line: #dde1e8;
+  --accent: #1f5fd6; --accent-fg: #ffffff; --ok: #1a7f45; --warn: #a15c00; --bad: #b3261e;
+  --bar-bg: #e6e9ef; --code-bg: #0f1420; --code-fg: #d6deeb;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151c; --card: #1a1f2a; --fg: #e3e8f0; --muted: #98a2b5; --line: #2b3342;
+    --accent: #5b8def; --accent-fg: #0b1020; --ok: #4cc38a; --warn: #e0a24a; --bad: #ff7b72;
+    --bar-bg: #2a3140; --code-bg: #0a0d14; --code-fg: #cdd6e4;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.55 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 20px 16px 60px; }
+header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+h1 { font-size: 20px; margin: 0 0 2px; }
+.sub { color: var(--muted); font-size: 12.5px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; }
+.card h2 { font-size: 15px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
+.card h2 .n { display: inline-flex; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); font-size: 12px; align-items: center; justify-content: center; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.row + .row { margin-top: 8px; }
+input[type=text], input[type=password], input[type=number], select {
+  background: var(--card); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; font: inherit; }
+input[type=text].grow, input[type=password].grow { flex: 1 1 320px; min-width: 200px; }
+input[type=number] { width: 80px; }
+button { font: inherit; border-radius: 6px; padding: 7px 13px; border: 1px solid var(--line); background: var(--card); color: var(--fg); cursor: pointer; }
+button:hover:not(:disabled) { border-color: var(--accent); }
+button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+button.danger { color: var(--bad); border-color: var(--bad); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+.hint { color: var(--muted); font-size: 12.5px; }
+.ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+.role { color: var(--muted); font-size: 12px; }
+.bar { height: 8px; background: var(--bar-bg); border-radius: 4px; overflow: hidden; min-width: 120px; }
+.bar > i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .4s; }
+.bar.big { height: 12px; }
+.bar > i.done { background: var(--ok); }
+.bar > i.fail { background: var(--bad); }
+.state { font-size: 12px; white-space: nowrap; }
+pre.log { background: var(--code-bg); color: var(--code-fg); border-radius: 8px; padding: 10px 12px; height: 260px; overflow: auto; margin: 10px 0 0; font: 12px/1.45 ui-monospace, "SF Mono", Menlo, Consolas, monospace; white-space: pre-wrap; word-break: break-all; }
+.kv { display: grid; grid-template-columns: 110px 1fr; gap: 2px 10px; font-size: 13px; margin-top: 8px; }
+.kv div:nth-child(odd) { color: var(--muted); }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
+.modal-bg.on { display: flex; }
+.modal { background: var(--card); border: 1px solid var(--line); border-radius: 10px; width: min(640px, 100%); max-height: 86vh; display: flex; flex-direction: column; padding: 14px 16px; }
+.dirs { overflow: auto; border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; flex: 1; min-height: 160px; }
+.dirs div { padding: 5px 10px; cursor: pointer; border-bottom: 1px solid var(--line); }
+.dirs div:hover { background: var(--bar-bg); }
+.path { font: 12.5px ui-monospace, Menlo, Consolas, monospace; word-break: break-all; }
+.chips { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.chip { padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--fg); font-size: 12.5px; cursor: pointer; user-select: none; }
+.chip.on { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+tr.hidden { display: none; }
+.variants { margin-top: 4px; padding: 4px 8px; border-left: 2px solid var(--line); font-size: 12.5px; }
+.variants .vopt { display: block; cursor: pointer; }
+td.num .full { display: block; color: var(--muted); font-size: 11.5px; }
+.banner { border: 1px solid var(--warn); color: var(--warn); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; display: none; }
+.banner.on { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>HF モデル一括ダウンロード</h1>
+      <div class="sub" id="envline">読み込み中...</div>
+    </div>
+    <button id="btnQuit" class="danger" title="サーバーを終了し、トークンをメモリから消去します">終了 (トークン消去)</button>
+  </header>
+
+  <div class="banner" id="depBanner"></div>
+
+  <section class="card">
+    <h2><span class="n">1</span>保存先</h2>
+    <div class="row">
+      <input type="text" class="grow" id="dest" spellcheck="false" placeholder="/Volumes/MODELS/hf_models  (絶対パス)">
+      <button id="btnBrowse">参照...</button>
+      <button id="btnCheckDest">確認</button>
+    </div>
+    <div class="hint" id="destInfo" style="margin-top:6px"></div>
+    <div class="hint">モデルは <span class="path">&lt;保存先&gt;/&lt;org&gt;/&lt;repo&gt;/</span> に置かれます。途中で止めても同じ保存先で再開できます。</div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">2</span>モデル</h2>
+    <div class="row">
+      <label>グループ
+        <select id="group"></select>
+      </label>
+      <span class="hint" id="groupDesc"></span>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <input type="text" id="fText" placeholder="名前・役割で絞り込み (例: nemotron, coder)" style="width:280px" spellcheck="false">
+      <span class="hint">形式:</span><span id="fFmts" class="chips"></span>
+    </div>
+    <div class="row">
+      <span class="hint">サイズ:</span><span id="fBands" class="chips"></span>
+      <span style="flex:1"></span>
+      <button id="btnSelVisible">表示中を全選択</button>
+      <button id="btnClrVisible">表示中を全解除</button>
+      <button id="btnClrFilter">絞り込み解除</button>
+    </div>
+    <div class="hint" id="filterInfo" style="margin-top:4px"></div>
+    <table style="margin-top:8px">
+      <thead><tr><th style="width:28px"></th><th>モデル</th><th>ライセンス</th><th class="num">サイズ</th><th style="width:230px">状況</th></tr></thead>
+      <tbody id="models"></tbody>
+    </table>
+    <div class="hint" id="selSummary" style="margin-top:8px"></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">3</span>Hugging Face トークン (任意・一時)</h2>
+    <div class="hint" style="margin-bottom:8px">ほとんどのモデルは公開・認可不要なので、トークン無しでも取得できます。承認制(gated)と表示されたモデルを取るとき、またはレート制限や接続断の余裕が欲しいときに入れてください。Read 権限のみのトークンを推奨します。</div>
+    <div class="row">
+      <input type="password" class="grow" id="token" autocomplete="off" spellcheck="false" placeholder="hf_..." >
+      <select id="ttl">
+        <option value="60">1時間で自動消去</option>
+        <option value="240" selected>4時間で自動消去</option>
+        <option value="1440">24時間で自動消去</option>
+        <option value="0">時間では消さない</option>
+      </select>
+      <button id="btnTokenSet">セット</button>
+      <button id="btnTokenClear">消去</button>
+    </div>
+    <div class="row"><label><input type="checkbox" id="clearOnFinish" checked> ダウンロード/検証の完了後に自動で消去する</label></div>
+    <div id="tokenInfo" class="hint" style="margin-top:6px"></div>
+    <div class="hint">保存場所はこのサーバーのメモリだけです。ファイル・環境変数・ログには残らず、作業プロセスには標準入力で渡します。</div>
+    <div class="hint">ここでセットしない場合でも、環境変数 HF_TOKEN か、<span class="path">hf auth login</span> で保存したログイン済みトークンがあれば、それが自動で使われます(上の表示で分かります)。ここでセットしたトークンはそれより優先されます。</div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">4</span>ダウンロード</h2>
+    <div class="row">
+      <label>並列数 <input type="number" id="maxWorkers" min="1" max="64" value="8"></label>
+      <label>リトライ回数 <input type="number" id="retries" min="1" max="20" value="5"></label>
+      <label><input type="checkbox" id="highPerf" checked> 高速モード (ネットワークとCPUを使い切る)</label>
+    </div>
+    <div class="row">
+      <button id="btnDry">事前確認 (何もダウンロードしない)</button>
+      <button id="btnStart" class="primary">ダウンロード開始</button>
+      <button id="btnStop" class="danger" disabled>停止</button>
+    </div>
+    <div id="jobBox" style="margin-top:12px; display:none">
+      <div class="row" style="justify-content:space-between">
+        <span><span class="pill" id="jobKind"></span> <span class="state" id="jobStatus"></span></span>
+        <span class="hint" id="jobStats"></span>
+      </div>
+      <div class="bar big" style="margin-top:6px"><i id="overallBar"></i></div>
+    </div>
+    <pre class="log" id="log"></pre>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">5</span>検証</h2>
+    <div class="hint" style="margin-bottom:8px">
+      「HF公式ハッシュと照合」は、Hugging Face が公開しているハッシュと全ファイルを突き合わせます。ダウンロードの破損検出はこちら。<br>
+      「sha256sums」は手元のコピーから作る控えで、別マシンへの移送後に壊れていないかの確認用です。
+    </div>
+    <div class="row">
+      <button id="btnVerify" class="primary">HF公式ハッシュと照合 (全ファイル)</button>
+      <button id="btnVerifyQuick">サイズだけ高速確認</button>
+    </div>
+    <div class="row">
+      <button id="btnSumGen">sha256sums.txt を作成</button>
+      <button id="btnSumVerify">sha256sums.txt で検証</button>
+    </div>
+  </section>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="row" style="justify-content:space-between">
+      <strong>保存先フォルダを選択</strong>
+      <button id="mClose">閉じる</button>
+    </div>
+    <div class="row" id="mShort" style="margin-top:8px"></div>
+    <div class="path" id="mPath" style="margin-top:8px"></div>
+    <div class="dirs" id="mDirs"></div>
+    <div class="row">
+      <button id="mUp">上のフォルダへ</button>
+      <input type="text" id="mNew" placeholder="新しいフォルダ名" style="width:200px">
+      <button id="mMk">作成</button>
+      <span style="flex:1"></span>
+      <button id="mPick" class="primary">このフォルダを選択</button>
+    </div>
+    <div class="hint bad" id="mErr"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const KEY = document.querySelector('meta[name="session-key"]').content;
+history.replaceState(null, "", location.pathname);
+const $ = (id) => document.getElementById(id);
+
+async function api(path, body) {
+  const opt = { headers: { "X-Session-Key": KEY } };
+  if (body !== undefined) {
+    opt.method = "POST";
+    opt.headers["Content-Type"] = "application/json";
+    opt.body = JSON.stringify(body);
+  }
+  const r = await fetch(path, opt);
+  let d = null;
+  try { d = await r.json(); } catch (e) { d = { ok: false, error: "HTTP " + r.status }; }
+  if (!r.ok && d && d.ok === undefined) d.ok = false;
+  return d;
+}
+
+function fmtBytes(n) {
+  if (n == null) return "-";
+  const u = ["B", "KB", "MB", "GB", "TB", "PB"];
+  let x = Number(n), i = 0;
+  while (x >= 1000 && i < u.length - 1) { x /= 1000; i++; }
+  return x.toFixed(i === 0 ? 0 : 2) + " " + u[i];
+}
+function fmtDur(s) {
+  if (s == null) return "-";
+  s = Math.max(0, Math.round(s));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  return (h ? h + "時間" : "") + (m || h ? m + "分" : "") + (h ? "" : (s % 60) + "秒");
+}
+
+let ST = null;          // /api/state
+let TOK = null;         // latest token status (set / ambient source)
+let JOB = null;         // latest job snapshot
+let logNext = 0;
+let busy = false;
+
+const STATE_LABEL = { pending: "待機", downloading: "ダウンロード中", retrying: "再試行待ち", done: "完了", failed: "失敗",
+  verifying: "検証中", verified: "検証OK", mismatch: "不一致あり" };
+const STATE_CLASS = { done: "ok", verified: "ok", failed: "bad", mismatch: "bad", retrying: "warn" };
+const KIND_LABEL = { download: "ダウンロード", dry_run: "事前確認", verify: "HF照合(全ファイル)", verify_quick: "サイズ確認",
+  checksum_generate: "sha256sums 作成", checksum_verify: "sha256sums 検証" };
+
+// ---------------------------------------------------------------- models table
+function selectedModels() {
+  return [...document.querySelectorAll("#models input.mchk:checked")].map((c) => c.value);
+}
+function hasVariants(m) { return !!(m.gguf_variants && m.gguf_variants.length); }
+function selectedVariants(m) {
+  return [...document.querySelectorAll('#models input.vchk[data-repo="' + CSS.escape(m.repo_id) + '"]:checked')].map((c) => c.value);
+}
+// expected download size: only the ticked files of a multi-file GGUF repo, otherwise the whole repo
+function selSize(m) {
+  if (!hasVariants(m)) return m.size_bytes;
+  const ids = new Set(selectedVariants(m));
+  return (m.base_bytes || 0) + m.gguf_variants.filter((v) => ids.has(v.id)).reduce((a, v) => a + v.size_bytes, 0);
+}
+function refreshSizeCell(m, tr) {
+  const cell = tr.querySelector("td.num");
+  const sz = selSize(m);
+  cell.textContent = fmtBytes(sz);
+  if (hasVariants(m) && sz !== m.size_bytes) {
+    const f = document.createElement("span"); f.className = "full"; f.textContent = "全ファイル " + fmtBytes(m.size_bytes);
+    cell.appendChild(f);
+  }
+}
+function selectedTotal(sel) {
+  return ST.models.filter((m) => sel.includes(m.repo_id)).reduce((a, m) => a + selSize(m), 0);
+}
+function renderModels() {
+  const tb = $("models");
+  tb.textContent = "";
+  for (const m of ST.models) {
+    const tr = document.createElement("tr");
+    tr.dataset.repo = m.repo_id;
+    tr.dataset.fmt = fmtKey(m.quant);
+    tr.dataset.band = String(bandOf(m.size_bytes));
+    tr.dataset.text = (m.repo_id + " " + (m.role || "") + " " + (m.license || "")).toLowerCase();
+    const c0 = document.createElement("td");
+    const cb = document.createElement("input");
+    cb.type = "checkbox"; cb.className = "mchk"; cb.value = m.repo_id;
+    cb.addEventListener("change", () => { $("group").value = "__custom"; updateSummary(); });
+    c0.appendChild(cb);
+    const c1 = document.createElement("td");
+    const nm = document.createElement("div"); nm.textContent = m.repo_id;
+    const rl = document.createElement("div"); rl.className = "role";
+    rl.textContent = m.role + "  @" + m.revision.slice(0, 8) + (m.quant ? "  [" + m.quant + "]" : "");
+    if (m.notes) tr.title = m.notes;
+    c1.append(nm, rl);
+    if (m.requires_token) {
+      const gt = document.createElement("div"); gt.className = "warn"; gt.style.fontSize = "12px";
+      gt.textContent = "承認制(gated): HFアカウントでライセンスに同意し、トークンを設定するか hf auth login でログインしてください";
+      c1.appendChild(gt);
+    }
+    if (hasVariants(m)) {
+      // multi-file GGUF repo: choose which files to fetch (README / licence etc. are always fetched)
+      const box = document.createElement("div"); box.className = "variants";
+      const hd = document.createElement("div"); hd.className = "hint"; hd.textContent = "取得するファイル:";
+      box.appendChild(hd);
+      for (const v of m.gguf_variants) {
+        const lb = document.createElement("label"); lb.className = "vopt";
+        const vc = document.createElement("input");
+        vc.type = "checkbox"; vc.className = "vchk"; vc.value = v.id; vc.dataset.repo = m.repo_id; vc.checked = true;
+        vc.addEventListener("change", () => { refreshSizeCell(m, tr); updateSummary(); });
+        const extra = (v.files.length > 1 ? ", " + v.files.length + " 分割" : "") + (v.note ? ", " + v.note : "");
+        lb.append(vc, document.createTextNode(" " + v.label + " (" + fmtBytes(v.size_bytes) + extra + ")"));
+        lb.title = v.files.join("\n");
+        box.appendChild(lb);
+      }
+      c1.appendChild(box);
+    }
+    const c2 = document.createElement("td"); c2.textContent = m.license;
+    const c3 = document.createElement("td"); c3.className = "num"; c3.textContent = fmtBytes(m.size_bytes);
+    const c4 = document.createElement("td");
+    const bar = document.createElement("div"); bar.className = "bar"; const bi = document.createElement("i"); bar.appendChild(bi);
+    const stt = document.createElement("div"); stt.className = "state"; stt.textContent = "-";
+    c4.append(bar, stt);
+    tr.append(c0, c1, c2, c3, c4);
+    tb.appendChild(tr);
+  }
+  const g = $("group");
+  g.textContent = "";
+  for (const [k, desc] of Object.entries(ST.groups)) {
+    const o = document.createElement("option"); o.value = k; o.textContent = k; g.appendChild(o);
+  }
+  const oc = document.createElement("option"); oc.value = "__custom"; oc.textContent = "カスタム"; g.appendChild(oc);
+  g.value = ST.default_group;
+  buildFilters();
+  applyGroup();
+  applyFilter();
+}
+
+// ---------------------------------------------------------------- filters (display only; ticks are kept)
+const BANDS = [["10GB未満", 0, 10e9], ["10-50GB", 10e9, 50e9], ["50-150GB", 50e9, 150e9], ["150-500GB", 150e9, 500e9], ["500GB超", 500e9, Infinity]];
+const FILTER = { fmts: new Set(), bands: new Set() };
+function fmtKey(q) { return q ? q.split(" ")[0] : "不明"; }
+function bandOf(sz) { return BANDS.findIndex((b) => sz >= b[1] && sz < b[2]); }
+function makeChip(label, set, key, count) {
+  const c = document.createElement("span");
+  c.className = "chip"; c.textContent = label + " (" + count + ")";
+  c.addEventListener("click", () => { set.has(key) ? set.delete(key) : set.add(key); c.classList.toggle("on", set.has(key)); applyFilter(); });
+  return c;
+}
+function buildFilters() {
+  const fm = {}, bd = {};
+  for (const m of ST.models) { const k = fmtKey(m.quant); fm[k] = (fm[k] || 0) + 1; const b = bandOf(m.size_bytes); bd[b] = (bd[b] || 0) + 1; }
+  const fbox = $("fFmts"); fbox.textContent = "";
+  for (const k of Object.keys(fm).sort()) fbox.appendChild(makeChip(k, FILTER.fmts, k, fm[k]));
+  const bbox = $("fBands"); bbox.textContent = "";
+  BANDS.forEach((b, i) => { if (bd[i]) bbox.appendChild(makeChip(b[0], FILTER.bands, String(i), bd[i])); });
+}
+function applyFilter() {
+  const t = $("fText").value.trim().toLowerCase();
+  let shown = 0;
+  for (const tr of document.querySelectorAll("#models tr")) {
+    const ok = (!t || tr.dataset.text.includes(t)) && (!FILTER.fmts.size || FILTER.fmts.has(tr.dataset.fmt))
+      && (!FILTER.bands.size || FILTER.bands.has(tr.dataset.band));
+    tr.classList.toggle("hidden", !ok);
+    if (ok) shown++;
+  }
+  $("filterInfo").textContent = "表示 " + shown + " / 全 " + ST.models.length + " 件";
+  updateSummary();
+}
+function setVisible(flag) {
+  for (const tr of document.querySelectorAll("#models tr:not(.hidden)")) tr.querySelector("input.mchk").checked = flag;
+  $("group").value = "__custom"; applyGroup();
+}
+$("fText").addEventListener("input", applyFilter);
+$("btnSelVisible").addEventListener("click", () => setVisible(true));
+$("btnClrVisible").addEventListener("click", () => setVisible(false));
+$("btnClrFilter").addEventListener("click", () => {
+  FILTER.fmts.clear(); FILTER.bands.clear(); $("fText").value = "";
+  document.querySelectorAll(".chip.on").forEach((c) => c.classList.remove("on")); applyFilter();
+});
+function applyGroup() {
+  const g = $("group").value;
+  if (g !== "__custom") {
+    for (const m of ST.models) {
+      const cb = document.querySelector('#models input.mchk[value="' + CSS.escape(m.repo_id) + '"]');
+      cb.checked = m.groups.includes(g);
+    }
+    $("groupDesc").textContent = ST.groups[g] || "";
+  } else {
+    $("groupDesc").textContent = "チェックボックスで個別に選択";
+  }
+  updateSummary();
+}
+function updateSummary() {
+  if (!ST) return;
+  const sel = selectedModels();
+  const tot = selectedTotal(sel);
+  const needTok = ST.models.filter((m) => sel.includes(m.repo_id) && m.requires_token).length;
+  const hiddenSel = document.querySelectorAll("#models tr.hidden input.mchk:checked").length;
+  const noFile = ST.models.filter((m) => sel.includes(m.repo_id) && hasVariants(m) && !selectedVariants(m).length).length;
+  const tokOk = TOK && (TOK.set || TOK.ambient);
+  $("selSummary").textContent = sel.length + " モデル選択 / 合計 " + fmtBytes(tot) + " (HF API で実測したサイズ)"
+    + (hiddenSel ? " / うち絞り込みで非表示 " + hiddenSel + " 件" : "")
+    + (noFile ? " / 取得ファイルが未選択のモデル " + noFile + " 件" : "")
+    + (needTok ? (tokOk ? " / 承認制モデル " + needTok + " 件を含む (使えるトークンあり)" : " / 承認制モデル " + needTok + " 件を含むためトークンが必要") : "");
+}
+
+// ---------------------------------------------------------------- destination
+async function checkDest() {
+  const p = $("dest").value.trim();
+  if (!p) { $("destInfo").textContent = ""; return null; }
+  const d = await api("/api/dest/check", { path: p });
+  const el = $("destInfo");
+  if (!d.ok) { el.className = "hint bad"; el.textContent = d.error; return null; }
+  const sel = selectedModels();
+  const need = selectedTotal(sel);
+  let msg = d.path + (d.exists ? "" : " (まだ無いので作成されます)") + " / 空き " + fmtBytes(d.free) + " / 書込 " + (d.writable ? "可" : "不可");
+  let cls = "hint ok";
+  if (!d.writable) { cls = "hint bad"; }
+  else if (need && d.free < need) { cls = "hint bad"; msg += " / 選択モデル合計 " + fmtBytes(need) + " に足りません (途中まで取得済みなら残量で判定されます)"; }
+  else if (need && d.free < need * 1.25) { cls = "hint warn"; msg += " / 余裕が 25% 未満です"; }
+  el.className = cls; el.textContent = msg;
+  return d;
+}
+
+// ---------------------------------------------------------------- folder browser
+async function browse(path) {
+  const d = await api("/api/fs?path=" + encodeURIComponent(path || ""));
+  if (!d.ok) { $("mErr").textContent = d.error || "error"; return; }
+  $("mErr").textContent = d.error || "";
+  $("mPath").textContent = d.path;
+  $("mPath").dataset.path = d.path;
+  $("mPath").dataset.parent = d.parent || "";
+  const sh = $("mShort"); sh.textContent = "";
+  for (const s of d.shortcuts) {
+    const b = document.createElement("button"); b.textContent = s.name; b.addEventListener("click", () => browse(s.path)); sh.appendChild(b);
+  }
+  const box = $("mDirs"); box.textContent = "";
+  for (const x of d.dirs) {
+    const row = document.createElement("div"); row.textContent = x.name; row.addEventListener("click", () => browse(x.path)); box.appendChild(row);
+  }
+  if (!d.dirs.length) { const e = document.createElement("div"); e.className = "hint"; e.textContent = "(サブフォルダなし)"; box.appendChild(e); }
+}
+$("btnBrowse").addEventListener("click", () => { $("modalBg").classList.add("on"); browse($("dest").value.trim() || ST.default_dest); });
+$("mClose").addEventListener("click", () => $("modalBg").classList.remove("on"));
+$("mUp").addEventListener("click", () => { const p = $("mPath").dataset.parent; if (p) browse(p); });
+$("mPick").addEventListener("click", () => { $("dest").value = $("mPath").dataset.path; $("modalBg").classList.remove("on"); checkDest(); });
+$("mMk").addEventListener("click", async () => {
+  const name = $("mNew").value.trim(); if (!name) return;
+  const d = await api("/api/fs/mkdir", { parent: $("mPath").dataset.path, name });
+  if (!d.ok) { $("mErr").textContent = d.error; return; }
+  $("mNew").value = ""; browse(d.path);
+});
+$("btnCheckDest").addEventListener("click", checkDest);
+$("dest").addEventListener("change", checkDest);
+$("group").addEventListener("change", () => { applyGroup(); checkDest(); });
+
+// ---------------------------------------------------------------- token
+let tokenError = "";   // last rejection message; kept until the next set/clear so polling does not wipe it
+const AMBIENT_LABEL = {
+  login: "ログイン済みのトークン (hf auth login で保存されたもの)",
+  env: "環境変数 HF_TOKEN のトークン",
+};
+function renderToken(t) {
+  const el = $("tokenInfo");
+  if (!t) return;
+  const before = TOK ? !!(TOK.set || TOK.ambient) : null;
+  TOK = t;
+  if (before !== !!(t.set || t.ambient)) updateSummary();
+  if (tokenError && !t.set) { el.className = "hint bad"; el.textContent = tokenError; return; }
+  if (t.set) {
+    const i = t.info || {};
+    let s = "セット済み: hf_****" + t.tail + (i.user ? "  ユーザー " + i.user : "") + (i.role ? "  種別 " + i.role : "");
+    if (t.expires_in != null) s += "  残り " + fmtDur(t.expires_in);
+    if (t.ambient) s += "  (" + AMBIENT_LABEL[t.ambient] + " より優先)";
+    el.className = "hint ok"; el.textContent = s;
+    if (i.warning) { el.className = "hint warn"; el.textContent = s + "  注意: " + i.warning; }
+  } else {
+    let s;
+    if (t.ambient === "login") s = "トークン未設定のため、" + AMBIENT_LABEL.login + "が自動で使われます。使わせたくない場合はターミナルで hf auth logout を実行してください";
+    else if (t.ambient === "env") s = "トークン未設定のため、" + AMBIENT_LABEL.env + "が自動で使われます";
+    else s = "トークン未設定 (匿名で実行されます)";
+    if (t.notice) s = t.notice + "  " + s;
+    el.className = t.ambient ? "hint ok" : "hint"; el.textContent = s;
+  }
+}
+$("btnTokenSet").addEventListener("click", async () => {
+  const v = $("token").value.trim();
+  if (!v) return;
+  $("btnTokenSet").disabled = true;
+  const d = await api("/api/token", { token: v, ttl_minutes: Number($("ttl").value), clear_on_finish: $("clearOnFinish").checked });
+  $("btnTokenSet").disabled = false;
+  $("token").value = "";
+  if (!d.ok) { tokenError = d.error || "トークンを設定できませんでした"; renderToken({ set: false, ambient: TOK ? TOK.ambient : null }); return; }
+  tokenError = "";
+  renderToken(d.token);
+});
+$("btnTokenClear").addEventListener("click", async () => {
+  tokenError = "";
+  await api("/api/token/clear", {});
+  $("token").value = "";
+  poll();
+});
+
+// ---------------------------------------------------------------- jobs
+const ACTION_BUTTONS = ["btnDry", "btnStart", "btnVerify", "btnVerifyQuick", "btnSumGen", "btnSumVerify"];
+function setBusy(b) {
+  busy = b;
+  for (const id of ACTION_BUTTONS) $(id).disabled = b;
+  $("btnStop").disabled = !b;
+}
+async function startJob(action) {
+  const dest = $("dest").value.trim();
+  if (!dest) { alert("保存先を入力してください"); return; }
+  const models = selectedModels();
+  // file selection is sent only for multi-file GGUF repos where not every file is ticked (omitted = all)
+  const variants = {};
+  let partial = 0;
+  if (!action.startsWith("checksum")) {
+    for (const m of ST.models) {
+      if (!models.includes(m.repo_id) || !hasVariants(m)) continue;
+      const ids = selectedVariants(m);
+      if (!ids.length) { alert(m.repo_id + "\n取得するファイルが 1 つも選ばれていません。"); return; }
+      if (ids.length < m.gguf_variants.length) { variants[m.repo_id] = ids; partial++; }
+    }
+  }
+  if (action === "download") {
+    const d = await checkDest();
+    if (!d) return;
+    const need = selectedTotal(models);
+    if (!confirm("次の内容でダウンロードを開始します。\n\n保存先: " + d.path + "\nモデル: " + models.length + " 件 / 合計 " + fmtBytes(need)
+      + (partial ? "\n(うち " + partial + " 件は選んだファイルだけ取得)" : "") + "\n空き容量: " + fmtBytes(d.free) + "\n\nよろしいですか?")) return;
+  }
+  const w = Number($("maxWorkers").value);
+  const res = await api("/api/start", { action, dest, models, variants, max_workers: w, retries: Number($("retries").value),
+    high_performance: $("highPerf").checked, workers: Math.min(32, Math.max(1, Math.round(w))) });
+  if (!res.ok) { alert(res.error || "開始できませんでした"); return; }
+  logNext = 0; $("log").textContent = "";
+  poll();
+}
+$("btnDry").addEventListener("click", () => startJob("dry_run"));
+$("btnStart").addEventListener("click", () => startJob("download"));
+$("btnVerify").addEventListener("click", () => startJob("verify"));
+$("btnVerifyQuick").addEventListener("click", () => startJob("verify_quick"));
+$("btnSumGen").addEventListener("click", () => startJob("checksum_generate"));
+$("btnSumVerify").addEventListener("click", () => startJob("checksum_verify"));
+$("btnStop").addEventListener("click", async () => {
+  if (!confirm("実行中の処理を停止します。ダウンロードは同じ保存先で再開できます。")) return;
+  await api("/api/stop", {});
+  poll();
+});
+$("btnQuit").addEventListener("click", async () => {
+  if (!confirm("サーバーを終了します。実行中の処理は停止し、トークンはメモリから消えます。")) return;
+  await api("/api/shutdown", {});
+  document.body.textContent = "終了しました。このタブは閉じて構いません。";
+});
+
+function renderJob(j) {
+  const box = $("jobBox");
+  if (!j) { box.style.display = "none"; setBusy(false); return; }
+  box.style.display = "block";
+  JOB = j;
+  const running = j.status === "running";
+  setBusy(running);
+  $("jobKind").textContent = KIND_LABEL[j.kind] || j.kind;
+  const sl = { running: "実行中", finished: "完了", failed: "失敗 (終了コード " + j.exit_code + ")", stopped: "停止しました" }[j.status];
+  const el = $("jobStatus"); el.textContent = sl; el.className = "state " + (j.status === "finished" ? "ok" : j.status === "failed" ? "bad" : j.status === "stopped" ? "warn" : "");
+  const pct = j.bytes_total ? Math.min(100, (j.bytes_done / j.bytes_total) * 100) : 0;
+  const bar = $("overallBar"); bar.style.width = pct.toFixed(1) + "%";
+  bar.className = j.status === "finished" ? "done" : (j.status === "failed" ? "fail" : "");
+  let st = "";
+  if (j.bytes_total) st += fmtBytes(j.bytes_done) + " / " + fmtBytes(j.bytes_total) + " (" + pct.toFixed(1) + "%)";
+  if (running && j.speed_bps > 1) st += "  " + fmtBytes(j.speed_bps) + "/s  残り " + fmtDur(j.eta_s);
+  if (!running && j.ended) st += "  所要 " + fmtDur(j.ended - j.started);
+  $("jobStats").textContent = st;
+  for (const m of j.models) {
+    const tr = document.querySelector('#models tr[data-repo="' + CSS.escape(m.repo_id) + '"]');
+    if (!tr) continue;
+    const i = tr.querySelector(".bar > i"), s = tr.querySelector(".state");
+    const p = m.size ? Math.min(100, (m.bytes / m.size) * 100) : 0;
+    const showBar = ["downloading", "retrying", "done", "failed"].includes(m.state) || (m.state === "pending" && p > 0);
+    i.style.width = (showBar ? p : (m.state === "verified" ? 100 : 0)).toFixed(1) + "%";
+    i.className = (m.state === "done" || m.state === "verified") ? "done" : (m.state === "failed" || m.state === "mismatch") ? "fail" : "";
+    s.className = "state " + (STATE_CLASS[m.state] || "");
+    s.textContent = (STATE_LABEL[m.state] || m.state) + (showBar ? " " + p.toFixed(0) + "%" : "") + (m.note ? "  " + m.note : "");
+  }
+  if (j.log && j.log.length) {
+    const lg = $("log");
+    const stick = lg.scrollTop + lg.clientHeight >= lg.scrollHeight - 30;
+    lg.textContent += j.log.join("\n") + "\n";
+    if (stick) lg.scrollTop = lg.scrollHeight;
+  }
+  logNext = j.log_next;
+}
+
+let timer = null;
+async function poll() {
+  clearTimeout(timer);
+  let delay = 4000;
+  try {
+    const d = await api("/api/job?since=" + logNext);
+    if (d && d.ok) {
+      renderToken(d.token);
+      renderJob(d.job);
+      if (d.job && d.job.status === "running") delay = 1500;
+    }
+  } catch (e) { delay = 5000; }
+  timer = setTimeout(poll, delay);
+}
+
+// ---------------------------------------------------------------- boot
+(async function init() {
+  const d = await api("/api/state");
+  if (!d.ok) { $("envline").textContent = "初期化に失敗しました: " + (d.error || ""); return; }
+  ST = d;
+  const e = d.env;
+  $("envline").textContent = e.platform + " / Python " + e.python + " / huggingface_hub " + (e.huggingface_hub || "未インストール")
+    + " / hf_xet " + (e.hf_xet || "なし") + " / CPU " + e.cpus;
+  const warns = [];
+  if (!e.huggingface_hub) warns.push("huggingface_hub が入っていません。起動スクリプト (start_gui_windows.bat / start_gui_mac.command / start_gui_linux.sh) から起動するか、pip install -r requirements.txt を実行してください。");
+  else if (!e.hf_xet) warns.push("hf_xet が入っていません。大容量の取得が遅くなる可能性があります (pip install hf_xet)。");
+  if (warns.length) { const b = $("depBanner"); b.textContent = warns.join(" "); b.classList.add("on"); }
+  $("dest").value = d.default_dest;
+  $("maxWorkers").value = Math.min(16, Math.max(8, e.cpus));
+  renderModels();
+  renderToken(d.token);
+  checkDest();
+  poll();
+})();
+</script>
+</body>
+</html>

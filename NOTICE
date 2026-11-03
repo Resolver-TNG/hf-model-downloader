@@ -1,0 +1,8 @@
+hf-model-downloader
+Copyright 2026 Resolver-TNG
+
+This product includes no model weights. It downloads models from Hugging Face at run time;
+each model remains under its own license.
+
+Runtime dependency (not bundled): huggingface_hub (Apache-2.0).
+"Hugging Face" is a trademark of Hugging Face, Inc. This project is not affiliated with it.
