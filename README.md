@@ -2,6 +2,8 @@
 
 A small local tool that downloads a set of pinned [Hugging Face](https://huggingface.co) model snapshots in one go, with a browser GUI (or a plain CLI), resumable downloads and hash verification against the hashes Hugging Face publishes.
 
+I wrote this for my own use when setting up a DGX box, and I'm putting it out as is. Use it however you like. (DGX をセットアップするときに個人的に使っているツールです。好きに使ってください。)
+
 > Unofficial. This project is not affiliated with, endorsed by, or sponsored by Hugging Face, Inc. "Hugging Face" is a trademark of its owner.
 
 日本語の詳しい使い方: [docs/USAGE.ja.md](docs/USAGE.ja.md)
